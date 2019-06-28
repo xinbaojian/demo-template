@@ -1,0 +1,38 @@
+server:
+  port: 8086
+
+spring:
+    datasource:
+      url: jdbc:postgresql://${DB_HOSE:192.168.25.194}:${DB_PORT:5432}/${DB_NAME:security}?characterEncoding=utf8&useSSL=false
+      username: ${DB_USERNAME:postgres}
+      password: ${DB_PASSWORD:123456}
+      driver-class-name: org.postgresql.Driver
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      test-on-borrow: true
+    flyway:
+      baseline-on-migrate: true
+      location: db/migration
+      baseline-version: 1.0.0
+      enabled: true
+      sql-migration-prefix: V
+      sql-migration-suffix: .sql
+## 该配置节点为独立的节点，有很多同学容易将这个配置放在spring的节点下，导致配置无法被识别
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
+  type-aliases-package: com.qitech.mybatis.entity  # 注意：对应实体类的路径
+#pagehelper分页插件
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
+# FLYWAY (FlywayProperties)
+#flyway.baselineOnmigrate: true
+  #baseline-version: 1.0.0
+  #enabled: true
+  #sql-migration-prefix: V
+  #sql-migration-suffix: .sql
+  #baseline-on-migrate: true
+  #locations: db/migration

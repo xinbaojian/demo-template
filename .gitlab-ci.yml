@@ -1,0 +1,5 @@
+deploy_develop:
+  only:
+    - develop
+  script:
+    - bash docker-build.sh all

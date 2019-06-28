@@ -1,0 +1,32 @@
+spring:
+  profiles:
+    active: ${PROFILE_ACTIVE:dev}
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  application:
+    name: security-gateway
+server:
+  port: ${SERVER_PORT:5103}
+  tomcat:
+    uri-encoding: UTF-8
+
+feign:
+  hystrix:
+    enabled: true
+#hystrix 熔断机制
+hystrix:
+  #Hystix请求线程池缺省为最大10个线程，
+  threadpool:
+    default:
+      coreSize: 500 #缺省为10
+  shareSecurityContext: true
+  command:
+    default:
+      circuitBreaker:
+        sleepWindowInMilliseconds: 100000
+        forceClosed: true
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 600000

@@ -1,0 +1,121 @@
+spring:
+  application:
+    name: security-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: SECURITY-FIRE-SAFETY
+          # 重点！/info必须使用http进行转发，lb代表从注册中心获取服务
+          uri: lb://SECURITY-FIRE-SAFETY
+          predicates:
+            # 重点！转发该路径！
+          - Path=/firesafety/**
+          filters:
+          - StripPrefix=1
+        - id: SECURITY-WEBSOCKET
+          uri: lb://SECURITY-WEBSOCKET
+          predicates:
+          - Path=/websocket/**
+          filters:
+          - StripPrefix=1
+        - id: SECURITY-WEBSOCKET-SOCKET
+          uri: lb:ws://SECURITY-WEBSOCKET
+          predicates:
+          - Path=/websocket/ws/**
+          filters:
+          - StripPrefix=1
+        - id: SECURITY-FIRE-SAFETY-GATEWAY
+          uri: lb:ws://SECURITY-FIRE-SAFETY-GATEWAY
+          predicates:
+          - Path=/safetygateway/**
+          filters:
+          - StripPrefix=1
+        - id: SECURITY-WEBSOCKET
+          uri: lb://SECURITY-WEBSOCKET
+          predicates:
+          - Path=/websocket/**
+          filters:
+          - StripPrefix=1
+        - id: SECURITY-WEBSOCKET-SOCKET
+          uri: lb:ws://SECURITY-WEBSOCKET
+          predicates:
+          - Path=/websocket/ws/**
+          filters:
+          - StripPrefix=1
+        - id: SECURITY-ADMIN
+          uri: lb://SECURITY-ADMIN
+          predicates:
+          - Path=/admin/**
+          filters:
+          - StripPrefix=1
+        - id: SECURITY-ALARM
+          uri: lb://SECURITY-ALARM
+          predicates:
+          - Path=/alarm/**
+          filters:
+          - StripPrefix=1
+#        - id: OLDADMIN
+#          uri: ${OLD_ADMIN_URL:http://192.168.6.128:8080}
+#          predicates:
+#            - Header=Authorization # Authorization,则转发
+        - id: SECURITY-ENVIRONMENT
+          uri: lb://ENVIRONMENT-PROTECTION
+          predicates:
+          - Path=/environment/**
+          filters:
+          - StripPrefix=1
+      discovery:
+        locator:
+          enabled: true
+  redis:
+    database: ${REDIS_DATABASE:0}
+    host: ${REDIS_HOST:192.168.6.128}
+    port: ${REDIS_PORT:6379}
+    lettuce:
+      pool:
+        #最大连接数
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+        max-wait: 1000ms
+        #最大空闲
+        max-idle: 8
+        #最小空闲
+        min-idle: 0
+server:
+  port: ${SERVER_PORT:5103}
+
+
+eureka:
+  instance:
+    hostname: security-gateway-${random.value}
+    instance-id: ${eureka.instance.hostname}:${server.port}:@project.version@
+    ip-address: ${INSTANCE_IP:192.168.6.128}
+    #服务过期时间配置,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除
+    #注意，EurekaServer一定要设置eureka.server.eviction-interval-timer-in-ms否则这个配置无效，这个配置一般为服务刷新时间配置的三倍
+    lease-expiration-duration-in-seconds: 2
+    #服务刷新时间配置，每隔这个时间会主动心跳一次
+    #默认30S
+    lease-renewal-interval-in-seconds: 1
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_HOSTNAME:192.168.6.128}:${EUREKA_PORT:8761}/eureka/
+    healthcheck:
+      enable: true
+    ##eureka client刷新本地缓存时间
+    # 默认30s
+    registryFetchIntervalSeconds: 5
+
+jwt:
+  secret:
+    key: show@me@the@money
+  blacklist:
+    key:
+      format: JWT_BLACKLIST::%s
+  token:
+    secret: ${TOKEN_SECRET:show@me@the@money}
+    expire: ${TOKEN_EXPIRE:2592000000}
+
+auth:
+  skip:
+    urls: /admin/api/login,/firesafety/alarm,/admin/api/logs,/admin/api/validatePlan,/admin/api/interface/log

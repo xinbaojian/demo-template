@@ -1,0 +1,8 @@
+server:
+  port: ${SERVER_PORT:8761}
+
+spring:
+  application:
+    name: security-eureka-server
+  profiles:
+    active: ${PROFILE_ACTIVE:dev}

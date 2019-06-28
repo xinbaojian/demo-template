@@ -1,0 +1,24 @@
+
+
+server:
+  port: ${SERVER_PORT:5213}
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  profiles:
+    active: ${PROFILE_ACTIVE:dev}
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  application:
+    name: security-scheduling
+druid:
+  allow: 127.0.0.1
+  deny:
+  loginUsername: admin
+  loginPassword: show@me@the@money
+  resetEnable: false
+
+logging:
+  config: classpath:config/logback.xml

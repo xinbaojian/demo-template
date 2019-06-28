@@ -1,0 +1,41 @@
+server:
+  port: ${SERVER_PORT:5204}
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  profiles:
+    active: ${PROFILE_ACTIVE:dev}
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  aop:
+    # 开启Aop配置
+    auto: true
+  cache:
+    type: redis
+druid:
+  allow: 127.0.0.1
+  deny:
+  loginUsername: admin
+  loginPassword: show@me@the@money
+  resetEnable: false
+
+logging:
+  config: classpath:config/logback.xml
+
+jwt:
+  refresh:
+    token:
+      key:
+        format: JWT_REFRESH_TOKEN:%s
+  blacklist:
+    key:
+      format: JWT_BLACKLIST::%s
+  token:
+    secret: ${TOKEN_SECRET:show@me@the@money}
+    expire: ${TOKEN_EXPIRE:2592000000}
+refresh:
+  token:
+    expire:
+      time: 120000
