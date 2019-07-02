@@ -3,6 +3,6 @@ server:
 
 spring:
   application:
-    name: security-eureka-server
+    name: eureka-server
   profiles:
     active: ${PROFILE_ACTIVE:dev}

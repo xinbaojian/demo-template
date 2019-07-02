@@ -17,6 +17,7 @@
         <module>manage-gateway</module>
         <module>manage-websocket</module>
         <module>manage-scheduling</module>
+        <module>manage-stream</module>
     </modules>
     <packaging>pom</packaging>
 

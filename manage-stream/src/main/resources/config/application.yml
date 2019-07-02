@@ -1,0 +1,20 @@
+server:
+  port: ${SERVER_PORT:9898}
+spring:
+  application:
+    name: manage-stream
+  rabbitmq:
+    host: ${RABBIT_HOST:101.132.164.110}
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    stream:
+      bindings:
+        myInput:
+          #指定输入通道对应的主题名
+          destination: minestream
+          #指定该应用实例属于 stream 消费组
+          group: stream
+        myOutput:
+          destination: minestream
